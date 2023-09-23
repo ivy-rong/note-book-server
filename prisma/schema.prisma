@@ -9,3 +9,28 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id       Int    @id @default(autoincrement())
+  userName String @unique
+  password String
+  Lists Lists[]
+}
+
+model Lists {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime? @map("created_at")
+  updateAt  DateTime? @map("update_at")
+  deletedAt DateTime? @map("deleted_at")
+  published Boolean @default(false)
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  Int
+  // Contents Content[]
+}
+
+model Content {
+  id      Int    @id @default(autoincrement())
+  content String
+  // list    Lists    @relation(fields: [listId], references: [id])
+  // listId  Int
+}
