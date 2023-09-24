@@ -2,35 +2,58 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
   id       Int    @id @default(autoincrement())
-  userName String @unique
-  password String
-  Lists Lists[]
+  username String @unique @db.VarChar(50)
+  password String @db.VarChar(255)
+
+  notes Note[]
+
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(3) // 创建时间
+  createdBy Int?      @map("created_by") // 创建人
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3) // 更新时间
+  updatedBy Int?      @map("updated_by") // 更新人
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3) // 删除时间
+  deletedBy Int?      @map("deleted_by") // 删除人
 }
 
-model Lists {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime? @map("created_at")
-  updateAt  DateTime? @map("update_at")
-  deletedAt DateTime? @map("deleted_at")
+model Note {
+  id        Int     @id @default(autoincrement())
   published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
-  // Contents Content[]
+
+  contents Content[]
+
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int  @map("author_id")
+
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(3) // 创建时间
+  createdBy Int?      @map("created_by") // 创建人
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3) // 更新时间
+  updatedBy Int?      @map("updated_by") // 更新人
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3) // 删除时间
+  deletedBy Int?      @map("deleted_by") // 删除人
 }
 
 model Content {
   id      Int    @id @default(autoincrement())
-  content String
-  // list    Lists    @relation(fields: [listId], references: [id])
-  // listId  Int
+  content String @db.Text
+
+  note   Note? @relation(fields: [noteId], references: [id])
+  noteId Int   @map("note_id")
+
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(3) // 创建时间
+  createdBy Int?      @map("created_by") // 创建人
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3) // 更新时间
+  updatedBy Int?      @map("updated_by") // 更新人
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3) // 删除时间
+  deletedBy Int?      @map("deleted_by") // 删除人
 }
