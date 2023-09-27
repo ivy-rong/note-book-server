@@ -6,7 +6,13 @@ export type BaseResponse<T = any> = Response<{
   data?: T
 }>
 
-export interface PageResponse<T = any> {
+export type PageResponse<T = any> = Response<{
+  message: string
+  code?: number
+  data?: BasePagesResponse<T>
+}>
+
+export interface BasePagesResponse<T = any> {
   data?: T
   pageCount: number
   pageSize: number

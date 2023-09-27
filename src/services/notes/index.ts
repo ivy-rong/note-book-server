@@ -2,7 +2,7 @@ import { prisma } from '../prisma'
 import { Note } from '@prisma/client'
 
 class NotesService {
-  async getNotes(userId: number, pageSize: number, pageCount: number) {
+  async getNotes(userId: number, pageSize = 10, pageCount = 1) {
     return await prisma.note.findMany({
       where: {
         authorId: userId

@@ -3,6 +3,12 @@ import dayjs from 'dayjs'
 import type { TimeFormatter } from '@/types'
 
 /**
- * 获取带格式化的当前时间
+ * 获取带格式化的时间
  */
-export const getCurrentTime = (formatter: TimeFormatter = 'YYYY-MM-DD HH:mm:ss') => dayjs(Date.now()).format(formatter)
+
+export const formatTime = (
+  time: string | number | Date,
+  format: TimeFormatter = 'YYYY-MM-DD HH:mm:ss'
+) => {
+  return dayjs(time).format(format)
+}
