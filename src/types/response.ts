@@ -5,3 +5,10 @@ export type BaseResponse<T = any> = Response<{
   code?: number
   data?: T
 }>
+
+export interface PageResponse<T = any> {
+  data?: T
+  pageCount: number
+  pageSize: number
+  total: number
+}
