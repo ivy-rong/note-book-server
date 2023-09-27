@@ -78,7 +78,10 @@ router.get(
 )
 
 //添加当前用户当前笔记
-router.post('/:userId/note', async (req, res) => {})
+router.post(
+  '/:userId/note',
+  async (req: Request, res: BaseResponse<Note>) => {}
+)
 
 export default {
   path: '',

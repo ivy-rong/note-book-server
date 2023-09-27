@@ -25,7 +25,8 @@ class JWTManager {
       if (data.hasOwnProperty('id')) {
         const currentDate = Math.floor(Date.now() / 1000)
         const timeDiff = currentDate - exp
-        return timeDiff > 7 ? false : true
+        timeDiff > 7 ? false : true
+        return timeDiff > 7 ? false : data.id
       } else {
         return false
       }
