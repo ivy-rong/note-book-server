@@ -9,32 +9,35 @@ import { NoteResponse } from '@/models'
 const router = express.Router()
 
 //获取当前用户所有笔记
-router.get('/notes', async (req: Request, res: BaseResponse<NoteResponse>) => {
-  const { id } = req.currentUser
-  const { pageCount = 1, pageSize = 10 } = req.query || {}
+router.get(
+  '/contents',
+  async (req: Request, res: BaseResponse<NoteResponse>) => {
+    const { id } = req.currentUser
+    const { pageCount = 1, pageSize = 10 } = req.query || {}
 
-  const pageCountType = Number(pageCount)
-  const pageSizeType = Number(pageSize)
-  console.log(id, pageSizeType, pageCountType)
-  try {
-    const notes = await NotesService.getNotes(id, pageSizeType, pageCountType)
-    res.status(200).json({
-      message: '获取笔记数据成功',
-      data: {
-        pageCount: pageCountType,
-        pageSize: pageSizeType,
-        total: notes.length,
-        notes: notes
-      }
-    })
-    return
-  } catch (e) {
-    res.status(400).json({
-      message: (e as Error).message
-    })
-    return
+    const pageCountType = Number(pageCount)
+    const pageSizeType = Number(pageSize)
+    console.log(id, pageSizeType, pageCountType)
+    try {
+      const notes = await NotesService.getNotes(id, pageSizeType, pageCountType)
+      res.status(200).json({
+        message: '获取笔记数据成功',
+        data: {
+          pageCount: pageCountType,
+          pageSize: pageSizeType,
+          total: notes.length,
+          notes: notes
+        }
+      })
+      return
+    } catch (e) {
+      res.status(400).json({
+        message: (e as Error).message
+      })
+      return
+    }
   }
-})
+)
 
 //获取当前用户一个笔记
 router.get('/note/:noteId', async (req: Request, res: BaseResponse<Note>) => {

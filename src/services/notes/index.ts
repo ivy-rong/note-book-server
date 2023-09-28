@@ -1,5 +1,5 @@
 import { prisma } from '../prisma'
-import { Note, Content } from '@prisma/client'
+import { Note } from '@prisma/client'
 
 class NotesService {
   async getNotes(userId: number, pageSize = 10, pageCount = 1) {
