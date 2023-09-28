@@ -1,5 +1,5 @@
 import { prisma } from '../prisma'
-import { Note } from '@prisma/client'
+import { Note, Content } from '@prisma/client'
 
 class NotesService {
   async getNotes(userId: number, pageSize = 10, pageCount = 1) {
@@ -8,7 +8,10 @@ class NotesService {
         authorId: userId
       },
       skip: (pageCount - 1) * pageSize,
-      take: pageSize
+      take: pageSize,
+      include: {
+        contents: true
+      }
     })
   }
   //得到一个用户的一个笔记
@@ -17,6 +20,9 @@ class NotesService {
       where: {
         id: noteId,
         authorId: userId
+      },
+      include: {
+        contents: true
       }
     })
   }
@@ -45,6 +51,9 @@ class NotesService {
     return await prisma.note.create({
       data: {
         ...note
+      },
+      include: {
+        contents: true
       }
     })
   }

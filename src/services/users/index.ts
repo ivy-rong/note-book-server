@@ -14,10 +14,22 @@ class UsersService {
 
   async createUser(username: string, password: string) {
     const passwordEncryption = await hash(password, 10)
+
     return await prisma.user.create({
       data: {
         username,
         password: passwordEncryption
+      }
+    })
+  }
+  /**
+   * 根据id获取当前用户信息
+   * @param id
+   */
+  async getUserById(id: number) {
+    return await prisma.user.findFirstOrThrow({
+      where: {
+        id
       }
     })
   }
@@ -37,6 +49,13 @@ class UsersService {
       }
     }
     return user
+  }
+
+  filterSafeUserInfo<T extends { password: string }>(
+    user: T
+  ): Omit<T, 'password'> {
+    const { password, ...safeUserInfo } = user
+    return safeUserInfo
   }
 }
 

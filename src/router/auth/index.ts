@@ -51,12 +51,11 @@ router.post('/login', async (req, res: BaseResponse<AuthResponse>) => {
 
   // 生成 token
   const accessToken = JWTManager.generateToken(user.id)
-
   return res.status(200).json({
     message: '登录成功',
     data: {
       accessToken,
-      user
+      user: UsersService.filterSafeUserInfo<User>(user)
     }
   })
 })
@@ -96,7 +95,7 @@ router.post('/signup', async (req, res: BaseResponse<AuthResponse>) => {
     message: '注册成功',
     data: {
       accessToken,
-      user
+      user: UsersService.filterSafeUserInfo<User>(user)
     }
   })
 })

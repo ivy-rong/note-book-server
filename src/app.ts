@@ -2,6 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import { BaseRegister } from '@/base'
 import { routers } from '@/router'
+import { validateToken } from '@/middlewares'
 import morgan from 'morgan'
 const app = express()
 
@@ -14,6 +15,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(morgan('dev'))
 // 静态目录
 app.use('/public', express.static('public'))
+
+//添加认证中间键
+app.use(validateToken)
 
 app.get('/', (req, res) => {
   res.status(200).send('Hello')

@@ -4,44 +4,21 @@ import type { Request } from 'express'
 import { Note } from '@prisma/client'
 import { NotesService } from '@/services'
 import { BaseResponse } from '@/types'
-import { JWTManager } from '@/core'
 import { NoteResponse, NoteRequest } from '@/models'
+import { Console } from 'console'
 
 const router = express.Router()
 
 //获取当前用户所有笔记
-router.get(
-  '/:userId/notes',
-  async (req: Request, res: BaseResponse<NoteResponse>) => {
-    const { pageCount, pageSize } = req.query || {}
-    const { userId } = req.params || {}
-    const { authorization } = req.headers || {}
-    const pageCountType = Number(pageCount)
-    const pageSizeType = Number(pageSize)
-    const userIdType = Number(userId)
-    //验证token
-    if (!authorization || !JWTManager.verificationToken(authorization!)) {
-      res.status(401).json({
-        message: 'token验证失败请重新登录'
-      })
-      return
-    }
-    let notes: Note[]
-    try {
-      notes = await NotesService.getNotes(
-        userIdType,
-        pageSizeType,
-        pageCountType
-      )
-      console.log(notes)
-    } catch (e) {
-      notes = []
-      res.status(400).json({
-        message: (e as Error).message
-      })
-      return
-    }
+router.get('/notes', async (req: Request, res: BaseResponse<NoteResponse>) => {
+  const { id } = req.currentUser
+  const { pageCount = 1, pageSize = 10 } = req.query || {}
 
+  const pageCountType = Number(pageCount)
+  const pageSizeType = Number(pageSize)
+  console.log(id, pageSizeType, pageCountType)
+  try {
+    const notes = await NotesService.getNotes(id, pageSizeType, pageCountType)
     res.status(200).json({
       message: '获取笔记数据成功',
       data: {
@@ -52,36 +29,70 @@ router.get(
       }
     })
     return
+  } catch (e) {
+    res.status(400).json({
+      message: (e as Error).message
+    })
+    return
   }
-)
+})
 
 //获取当前用户一个笔记
-router.get(
-  '/:userId/note/:noteId',
-  async (req: Request, res: BaseResponse<Note>) => {
-    const { userId, noteId } = req.params || {}
-    try {
-      const note = await NotesService.getNote(Number(userId), Number(noteId))
-      console.log(note)
-      res.status(200).json({
-        message: '获取笔记成功',
-        data: note
-      })
-      return
-    } catch (e) {
-      res.status(400).json({
-        message: (e as Error).message
-      })
-      return
-    }
+router.get('/note/:noteId', async (req: Request, res: BaseResponse<Note>) => {
+  const { noteId } = req.params || {}
+  const { id } = req.currentUser
+  try {
+    const note = await NotesService.getNote(id, Number(noteId))
+    res.status(200).json({
+      message: '获取笔记成功',
+      data: note
+    })
+    return
+  } catch (e) {
+    res.status(400).json({
+      message: (e as Error).message
+    })
+    return
   }
-)
+})
 
 //添加当前用户当前笔记
-router.post(
-  '/:userId/note',
-  async (req: Request, res: BaseResponse<Note>) => {}
-)
+router.post('/note', async (req: Request<Note>, res: BaseResponse<Note>) => {
+  const { id } = req.currentUser
+  const requestNote = req.body || {}
+  try {
+    const note = await NotesService.addNote({ ...requestNote, authorId: id })
+    res.status(200).json({
+      message: '添加笔记成功',
+      data: note
+    })
+    return
+  } catch (e) {
+    res.status(400).json({
+      message: (e as Error).message
+    })
+    return
+  }
+})
+
+//删除当前用户当前笔记
+router.delete('/note/:id', async (req: Request, res: BaseResponse<Note>) => {
+  const { id } = req.params
+  try {
+    const note = await NotesService.deleteNote(Number(id))
+    console.log(note)
+    res.status(200).json({
+      message: '删除笔记成功',
+      data: note
+    })
+    return
+  } catch (e) {
+    res.status(400).json({
+      message: (e as Error).message
+    })
+    return
+  }
+})
 
 export default {
   path: '',
