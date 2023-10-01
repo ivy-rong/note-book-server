@@ -11,8 +11,8 @@ class ContentsService {
     })
   }
 
-  //修改一个笔记内容
-  async updateNote(id: number, data: Content) {
+  //修改一个笔记所有内容
+  async updateContents(id: number, data: Content) {
     return await prisma.content.update({
       where: {
         id
@@ -21,8 +21,8 @@ class ContentsService {
     })
   }
 
-  //删除一个笔记内容
-  async deleteNote(id: number) {
+  //删除一个笔记的一条内容
+  async deleteContent(id: number) {
     return await prisma.content.delete({
       where: {
         id
