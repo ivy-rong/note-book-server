@@ -23,12 +23,6 @@ class ContentsService {
       })
     })
     return Promise.all(updatePromises)
-    // return await prisma.content.updateMany({
-    //   where: {
-    //     noteId
-    //   },
-    //   data
-    // })
   }
 
   //删除一个笔记的一条内容
@@ -41,10 +35,11 @@ class ContentsService {
   }
 
   //增加一个笔记内容
-  async addNote(data: Content) {
+  async addContent(data: Content, noteId: number) {
     return await prisma.content.create({
       data: {
-        ...data
+        ...data,
+        noteId
       }
     })
   }
