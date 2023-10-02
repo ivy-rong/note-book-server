@@ -12,13 +12,23 @@ class ContentsService {
   }
 
   //修改一个笔记所有内容
-  async updateContents(id: number, data: Content) {
-    return await prisma.content.update({
-      where: {
-        id
-      },
-      data
+  async updateContents(noteId: number, data: Content[]) {
+    const updatePromises = data.map((content) => {
+      return prisma.content.updateMany({
+        where: {
+          id: content.id,
+          noteId
+        },
+        data: content
+      })
     })
+    return Promise.all(updatePromises)
+    // return await prisma.content.updateMany({
+    //   where: {
+    //     noteId
+    //   },
+    //   data
+    // })
   }
 
   //删除一个笔记的一条内容

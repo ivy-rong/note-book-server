@@ -29,24 +29,25 @@ router.get(
   }
 )
 
-//修改一个笔记内容
-// router.patch('/note/:id', async (req: Request, res: BaseResponse<Note>) => {
-//   const { id } = req.params || {}
-//   const { data } = req.body
-//   try {
-//     const note = await ContentsService.updateContents(Number(id), data)
-//     res.status(200).json({
-//       message: '修改笔记成功'
-//       // data: note
-//     })
-//     return
-//   } catch (e) {
-//     res.status(400).json({
-//       message: (e as Error).message
-//     })
-//     return
-//   }
-// })
+//修改一个笔记内容所有内容
+router.patch('/update/:noteId', async (req: Request, res: BaseResponse) => {
+  const { noteId } = req.params || {}
+  const { data } = req.body || {}
+  console.log(data)
+  try {
+    const contents = await ContentsService.updateContents(Number(noteId), data)
+    res.status(200).json({
+      message: '修改笔记成功',
+      data: contents
+    })
+    return
+  } catch (e) {
+    res.status(400).json({
+      message: (e as Error).message
+    })
+    return
+  }
+})
 
 // //添加当前用户当前笔记
 // router.post('/note', async (req: Request<Note>, res: BaseResponse<Note>) => {
