@@ -4,6 +4,7 @@ export interface ContentModel {
   id: number
   content: string
   noteId: number
+  title: string
   createdAt?: Date | null
   createdBy?: number | null
   updatedAt?: Date | null

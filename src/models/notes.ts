@@ -10,6 +10,7 @@ export interface NoteModel {
   updatedBy?: number | null
   deletedAt?: Date | null
   deletedBy?: number | null
+  title?: string
 }
 
 export interface NoteResponse {

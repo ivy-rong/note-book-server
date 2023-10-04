@@ -1,8 +1,8 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
-    "userName" VARCHAR(50) NOT NULL,
-    "password" VARCHAR(50) NOT NULL,
+    "username" VARCHAR(50) NOT NULL,
+    "password" VARCHAR(255) NOT NULL,
     "created_at" TIMESTAMPTZ(3) DEFAULT CURRENT_TIMESTAMP,
     "created_by" INTEGER,
     "updated_at" TIMESTAMPTZ(3),
@@ -17,6 +17,7 @@ CREATE TABLE "User" (
 CREATE TABLE "Note" (
     "id" SERIAL NOT NULL,
     "published" BOOLEAN NOT NULL DEFAULT false,
+    "title" TEXT NOT NULL,
     "author_id" INTEGER NOT NULL,
     "created_at" TIMESTAMPTZ(3) DEFAULT CURRENT_TIMESTAMP,
     "created_by" INTEGER,
@@ -44,7 +45,7 @@ CREATE TABLE "Content" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_userName_key" ON "User"("userName");
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- AddForeignKey
 ALTER TABLE "Note" ADD CONSTRAINT "Note_author_id_fkey" FOREIGN KEY ("author_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

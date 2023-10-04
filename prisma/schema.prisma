@@ -29,7 +29,8 @@ model User {
 model Note {
   id        Int     @id @default(autoincrement())
   published Boolean @default(false)
-
+  title  String    @db.Text
+  
   contents Content[]
 
   author   User @relation(fields: [authorId], references: [id])
@@ -45,7 +46,7 @@ model Note {
 
 model Content {
   id      Int    @id @default(autoincrement())
-  content String @db.Text
+  content String @db.Text 
 
   note   Note? @relation(fields: [noteId], references: [id])
   noteId Int   @map("note_id")
