@@ -12,12 +12,12 @@ const router = express.Router()
 router.get('/notes', async (req: Request, res: BaseResponse<NoteResponse>) => {
   const { id } = req.currentUser
   const { pageCount = 1, pageSize = 10 } = req.query || {}
-
   const pageCountType = Number(pageCount)
   const pageSizeType = Number(pageSize)
   console.log(id, pageSizeType, pageCountType)
   try {
     const notes = await NotesService.getNotes(id, pageSizeType, pageCountType)
+    console.log(notes)
     res.status(200).json({
       message: '获取笔记数据成功',
       data: {
